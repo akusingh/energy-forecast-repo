@@ -8,11 +8,9 @@
 │   └── my_state_machine.asl.json # Amazon States Language definition for your Step Function
 └── src                    # Directory for application source code (e.g., Lambda functions)
 ├── transform_data_lambda     # Directory for the 'TransformData' Lambda function
-│   ├── app.py               # Lambda handler code (Python example)
-│   └── requirements.txt     # Python dependencies
+│   ├── vpp-transformation.py              # Lambda handler code (Python example)
 ├── generate_basic_dashboard_lambda # Directory for 'GenerateBasicDashboard' Lambda
-│   ├── index.js             # Lambda handler code (Node.js example)
-│   └── package.json         # Node.js dependencies
+│   └── vpp-dashboard-generator.py    # Lambda handler code (Python example)
 └── generate_mi_dashboard_lambda    # Directory for 'GenerateMIDashboard' Lambda
 ├── lambda_function.py   # Lambda handler code (Another Python example)
 └── requirements.txt
