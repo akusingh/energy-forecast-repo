@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.9 # Specify a runtime if your project needs it (e.g., for SAM CLI or packaging Lambda deps)
+    commands:
+      # If you need to install dependencies for your Lambda functions before packaging
+      # - echo "Installing dependencies..."
+      # - pip install -r src/transform_data_lambda/requirements.txt -t src/transform_data_lambda/ --no-cache-dir
+      # Add similar commands for other Lambda functions if they have requirements.txt or package.json
+      - echo "Ensuring SAM CLI is available (usually pre-installed in CodeBuild images)"
+      - sam --version # Just a check
+
+  build:
+    commands:
+      - echo "Building and packaging the SAM application..."
+      # The 'sam package' command bundles Lambda code and creates the packaged-template.yaml
+      # Replace YOUR_ARTIFACT_BUCKET_NAME with the actual name of the S3 bucket
+      # used by SAM to upload deployment artifacts (Lambda zips, etc.)
+      - sam package --template-file template.yaml --s3-bucket vpp-s3-interview --output-template-file packaged-template.yaml
+      - echo "SAM package step completed."
+
+artifacts:
+  files:
+    # This file is the output of the 'sam package' command,
+    # containing references to the uploaded code artifacts in S3.
+    # This is the template file that the CloudFormation deploy stage will use.
+    - packaged-template.yaml
+
+  # Optional: If you have other files needed downstream, list them here
+  # - other_config_file.json
