@@ -12,8 +12,7 @@
 ├── generate_basic_dashboard_lambda # Directory for 'GenerateBasicDashboard' Lambda
 │   └── vpp-dashboard-generator.py    # Lambda handler code (Python example)
 └── generate_mi_dashboard_lambda    # Directory for 'GenerateMIDashboard' Lambda
-├── lambda_function.py   # Lambda handler code (Another Python example)
-└── requirements.txt
+├── vpp-ml.py   # Lambda handler code (Another Python example)
 ```
 **Explanation of the key files and folders:**
 
