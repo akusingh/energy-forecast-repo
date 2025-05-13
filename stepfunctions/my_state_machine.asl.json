@@ -1,0 +1,70 @@
+{
+  "Comment": "Orchestrate data transformation, ML (placeholder), and dashboard generation",
+  "StartAt": "TransformData",
+  "States": {
+    "TransformData": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:002573266567:function:vpp-transformation",
+      "Parameters": {
+        "bucket": "${$.bucket}",
+        "key": "${$.key}"
+      },
+      "Next": "GenerateBasicDashboard",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "TransformationFailed"
+        }
+      ]
+    },
+    "GenerateBasicDashboard": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:002573266567:function:vpp-dashboard-generator",
+      "Parameters": {
+        "bucket": "${$.bucket}"
+      },
+      "Next": "MLProcessingSagemaker",
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "DashboardFailed"
+        }
+      ]
+    },
+    "MLProcessingSagemaker": {
+      "Type": "Pass",
+      "Comment": "Pipeline for SageMaker ML processing",
+      "Next": "GenerateMlDashboard"
+    },
+    "GenerateMlDashboard": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:us-east-1:002573266567:function:vpp-dashboard-generator",
+      "Parameters": {
+        "bucket": "${$.bucket}"
+      },
+      "End": true,
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "Next": "DashboardFailed"
+        }
+      ]
+    },
+    "TransformationFailed": {
+      "Type": "Fail",
+      "Cause": "Transformation failed",
+      "Error": "DataTransformationError"
+    },
+    "DashboardFailed": {
+      "Type": "Fail",
+      "Cause": "Dashboard generation failed",
+      "Error": "DashboardGenerationError"
+    }
+  }
+}
